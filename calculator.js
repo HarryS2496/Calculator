@@ -6,6 +6,9 @@ let isBuildingNum2 = false;
 let num1DecimalCount = 0, num2DecimalCount = 0; // Track decimal places for num1 and num2
 let isResultDisplayed = false;
 
+// Split updateCalculation into two functions
+// One handles numbers, another handles operators.
+
 function updateCalculation(value) {
   // If the result is displayed, start the new calculation with the result as num1
   if (isResultDisplayed) {
