@@ -29,37 +29,32 @@ function updateCalculation(value) {
   else if (isBuildingNum2) {
     if (value === '.') {
       if (num2DecimalCount === 0) {
-        num2DecimalCount = 1;  // Allow only one decimal in num2
-        num2 = num2 === null ? 0 : num2; // Initialize num2 if it's null
+        num2DecimalCount = 1;  
+        num2 = num2 === null ? 0 : num2; // Ensures num2 is initialized to 0 when the decimal is first entered.
       }
-    } else {
-      if (num2 === null) {
-        num2 = value;  // Start num2 with the first digit
-      } else {
-        num2 = num2 * 10 + value;  // Append digit to num2
-      }
-      // Adjust num2 to take into account the decimal places
+    } 
+    else {
       if (num2DecimalCount > 0) {
-        num2 = num2 / Math.pow(10, num2DecimalCount); // Adjust for decimal place
+        num2 += value / Math.pow(10, num2DecimalCount); // Appends a decimal digit to num2 while maintaining decimal precision.
+        num2DecimalCount++;  // Increment decimal count for every digit after decimal
+      } else {
+        num2 = num2 === null ? value : num2 * 10 + value;
       }
     }
-  }
+  } 
   else {
     if (value === '.') {
       if (num1DecimalCount === 0) {
-        num1DecimalCount = 1;  // Allow only one decimal in num1
-        num1 = num1 === null ? 0 : num1; // Initialize num1 if it's null
+        num1DecimalCount = 1;
+        num1 = num1 === null ? 0 : num1; // Ensures num2 is initialized to 0 when the decimal is first entered.
       }
-    }
+    } 
     else {
-      if (num1 === null) {
-        num1 = value;  // Start num1 with the first digit
-      } else {
-        num1 = num1 * 10 + value;  // Append digit to num1
-      }
-      // Adjust num1 to take into account the decimal places
       if (num1DecimalCount > 0) {
-        num1 = num1 / Math.pow(10, num1DecimalCount); // Adjust for decimal place
+        num1 += value / Math.pow(10, num1DecimalCount); // Appends a decimal digit to num1 while maintaining decimal precision.
+        num1DecimalCount++;  // Increment decimal count for every digit after decimal
+      } else {
+        num1 = num1 === null ? value : num1 * 10 + value;
       }
     }
   }
@@ -69,16 +64,22 @@ function updateCalculation(value) {
 // 
 function updateDisplay(num1, operator, num2) {
   const display = document.getElementById("res");
+
+  // Ensure no extra zeroes are shown for num1
+  let formattedNum1 = num1 !== null ? num1 : "";
+  
+  // If num2 exists, format it the same way
+  let formattedNum2 = num2 !== null ? num2 : "";
+
+  // Dynamically format and avoid trailing zeroes, only showing necessary digits
   if (operator) {
-    display.value = `${num1} ${operator} ${num2 !== null ? num2 : ""}`;
+    display.value = `${formattedNum1} ${operator} ${formattedNum2}`;
   } else {
-    display.value = num1 !== null ? num1 : ""; // If number isn't null, its value is displayed. Otherwise, if null, its a blank.
+    display.value = formattedNum1;  // Only num1 if no operator
   }
 }
 
 function calculateResult() {
-  num1 = parseFloat(num1); 
-  num2 = num2 === null ? 0 : parseFloat(num2);  // If num2 is null, treat it as 0
   switch (operator) {
     case ' + ':
       result = num1 + num2; // Addition
