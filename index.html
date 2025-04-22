@@ -11,85 +11,41 @@
     <div id="calculator-output">
       <input type="text" id='res' readonly>
     </div>
+
     <div class="calculator-keys">
-      <button onclick="
-        updateCalculation(1);
-      ">1</button>
-
-      <button onclick="
-        updateCalculation(2);
-      ">2</button>
-
-      <button onclick="
-        updateCalculation(3);
-      ">3</button>
-
-      <button onclick="
-        updateCalculation(' + ');
-      ">+</button>
+      <button onclick="handleNumberInput('1')">1</button>
+      <button onclick="handleNumberInput('2')">2</button>
+      <button onclick="handleNumberInput('3')">3</button>
+      <button onclick="handleOperatorInput(' + ')">+</button>
     </div>
 
     <div class="calculator-keys">
-      <button onclick="
-        updateCalculation(4);
-      ">4</button>
-
-      <button onclick="
-        updateCalculation(5);
-      ">5</button>
-
-      <button onclick="
-        updateCalculation(6);
-      ">6</button>
-
-      <button onclick="
-        updateCalculation(' - ');
-      ">-</button>
+      <button onclick="handleNumberInput('4')">4</button>
+      <button onclick="handleNumberInput('5')">5</button>
+      <button onclick="handleNumberInput('6')">6</button>
+      <button onclick="handleOperatorInput(' - ')">-</button>
     </div>
 
     <div class="calculator-keys">
-      <button onclick="
-        updateCalculation(7);
-      ">7</button>
-
-      <button onclick="
-        updateCalculation(8);
-      ">8</button>
-
-      <button onclick="
-        updateCalculation(9);
-      ">9</button>
-
-      <button onclick="
-        updateCalculation(' * ');
-      ">*</button>
+      <button onclick="handleNumberInput('7')">7</button>
+      <button onclick="handleNumberInput('8')">8</button>
+      <button onclick="handleNumberInput('9')">9</button>
+      <button onclick="handleOperatorInput(' * ')">*</button>
     </div>
 
     <div class="calculator-keys">
-      <button onclick="
-        updateCalculation('.');
-      ">.</button>
-
-      <button onclick="
-        updateCalculation(0);
-      ">0</button>
-
-      <button onclick="
-        calculateResult();
-      ">=</button>
-
-      <button onclick="
-        updateCalculation(' / ');
-      ">/</button>
+      <button onclick="handleDecimalInput('.')">.</button>
+      <button onclick="handleNumberInput('0')">0</button>
+      <button onclick="handleOperatorInput(' ^ ')">^</button>
+      <button onclick="handleOperatorInput(' / ')">/</button>
     </div>
 
     <div class="calculator-keys">
-      <button onclick="
-        clearCalculation();
-      ">Clear</button>
+      <button class="important-buttons" onclick="clearCalculation()">Clear</button>
+      <button class="important-buttons" onclick="calculateResult()">=</button>
     </div>
   </div>
-  
+
   <script type="text/javascript" src="calculator.js"></script>
 </body>
 

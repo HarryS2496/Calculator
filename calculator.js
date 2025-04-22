@@ -1,121 +1,151 @@
-// Currently only works for tenths in decimals
-let num1 = null, num2 = null;
-let result = 0;
+// Add square root and percentages to operators
+
+let num1 = "";
+let num2 = "";
+let result = "";
 let operator = null;
 let isBuildingNum2 = false;
-let num1DecimalCount = 0, num2DecimalCount = 0; // Track decimal places for num1 and num2
 let isResultDisplayed = false;
 
-// Split updateCalculation into two functions
-// One handles numbers, another handles operators.
-
-function updateCalculation(value) {
-  // If the result is displayed, start the new calculation with the result as num1
+// Handles numerical input
+function handleNumberInput(value) {
+  // Start new calculation if result is already displayed
   if (isResultDisplayed) {
-    num1 = result;  // Use the previous result as num1
-    num2 = null;     // Reset num2
-    operator = null; // Reset operator for the new calculation
-    num1DecimalCount = 0; // Reset decimal count for num1
-    num2DecimalCount = 0; // Reset decimal count for num2
-    isResultDisplayed = false; // Reset the flag
+    num1 = result.toString();
+    num2 = "";
+    operator = null;
+    isResultDisplayed = false;
+    isBuildingNum2 = false;
   }
 
-  if (typeof value === 'string' && (value === ' + ' || value === ' - ' || value === ' * ' || value === ' / ')) {
-    if (num1 !== null) {
-      operator = value;
-      isBuildingNum2 = true;
-    }
+  // Assign input to num1 or 2 based on isBuildingNum2 flag
+  if (isBuildingNum2) {
+    num2 += value.toString();
+  } else {
+    num1 += value.toString();
   }
-  else if (isBuildingNum2) {
-    if (value === '.') {
-      if (num2DecimalCount === 0) {
-        num2DecimalCount = 1;  
-        num2 = num2 === null ? 0 : num2; // Ensures num2 is initialized to 0 when the decimal is first entered.
-      }
-    } 
-    else {
-      if (num2DecimalCount > 0) {
-        num2 += value / Math.pow(10, num2DecimalCount); // Appends a decimal digit to num2 while maintaining decimal precision.
-        num2DecimalCount++;  // Increment decimal count for every digit after decimal
-      } else {
-        num2 = num2 === null ? value : num2 * 10 + value;
-      }
-    }
-  } 
-  else {
-    if (value === '.') {
-      if (num1DecimalCount === 0) {
-        num1DecimalCount = 1;
-        num1 = num1 === null ? 0 : num1; // Ensures num2 is initialized to 0 when the decimal is first entered.
-      }
-    } 
-    else {
-      if (num1DecimalCount > 0) {
-        num1 += value / Math.pow(10, num1DecimalCount); // Appends a decimal digit to num1 while maintaining decimal precision.
-        num1DecimalCount++;  // Increment decimal count for every digit after decimal
-      } else {
-        num1 = num1 === null ? value : num1 * 10 + value;
-      }
-    }
-  }
+
+  // Update display of numbers and operator
   updateDisplay(num1, operator, num2);
 }
 
-// 
-function updateDisplay(num1, operator, num2) {
-  const display = document.getElementById("res");
-
-  // Ensure no extra zeroes are shown for num1
-  let formattedNum1 = num1 !== null ? num1 : "";
-  
-  // If num2 exists, format it the same way
-  let formattedNum2 = num2 !== null ? num2 : "";
-
-  // Dynamically format and avoid trailing zeroes, only showing necessary digits
-  if (operator) {
-    display.value = `${formattedNum1} ${operator} ${formattedNum2}`;
-  } else {
-    display.value = formattedNum1;  // Only num1 if no operator
+// Handles decimal input
+function handleDecimalInput() {
+  // Start new calculation if result is already displayed
+  if (isResultDisplayed) {
+    num1 = result.toString();
+    num2 = "";
+    operator = null;
+    isResultDisplayed = false;
+    isBuildingNum2 = false;
   }
+
+  // Check if decimal is added to num1 or num2
+  if (isBuildingNum2) {
+    if (num2.includes(".")) return;
+    num2 = num2 === "" ? "0." : num2 + ".";
+  } else {
+    if (num1.includes(".")) return;
+    num1 = num1 === "" ? "0." : num1 + ".";
+  }
+
+  // Update display of numbers and operator
+  updateDisplay(num1, operator, num2);
 }
 
+// Handles operator input
+function handleOperatorInput(op) {
+  // Start new calculation if result is already displayed
+  if (isResultDisplayed) {
+    num1 = result.toString();
+    num2 = "";
+    isResultDisplayed = false;
+  }
+
+  // If the operator is √ or %, handle the operation immediately
+  if (op === "√" || op === "%") {
+    operator = op;
+    calculateResult();
+    return; // Do not continue the regular operator handling for √ or %
+  }
+
+  // Ensure num1 is not empty before setting an operator
+  // After operator is set, change isBuildingNum2 flag
+  if (num1 !== "") {
+    operator = op;
+    isBuildingNum2 = true;
+  }
+
+  // Update display of numbers and operator
+  updateDisplay(num1, operator, num2);
+}
+
+// Handles the calculator's display of numbers and operators
+function updateDisplay(num1, operator, num2) {
+  const display = document.getElementById("res");
+  let formatted = num1;
+
+  if (operator) {
+    formatted += operator;
+    if (num2) {
+      formatted += num2;
+    }
+  }
+
+  display.value = formatted;
+}
+
+// Combines num1, operator, num2 to get the result
 function calculateResult() {
+  const n1 = parseFloat(num1);
+  const n2 = num2 ? parseFloat(num2) : null;  // Only use num2 if it exists
+
   switch (operator) {
-    case ' + ':
-      result = num1 + num2; // Addition
+    // Addition
+    case " + ":
+      result = (n1 + n2).toString();
       break;
-    case ' - ':
-      result = num1 - num2; // Subtraction
+    // Subtraction
+    case " - ":
+      result = (n1 - n2).toString();
       break;
-    case ' * ':
-      result = num1 * num2; // Multiplication
+    // Multiplication
+    case " * ":
+      result = (n1 * n2).toString();
       break;
-    case ' / ':
-      if (num2 === 0) {
-        result = "Error: Div by 0"; // Handle division by zero
-      } else {
-        result = num1 / num2; // Division
-      }
+    // Division
+    case " / ":
+      result = n2 === 0 ? "Error: Div by 0" : (n1 / n2).toString();
+      break;
+    // Exponent
+    case " ^ ":
+      result = Math.pow(n1, n2).toString();
       break;
     default:
       result = "Invalid operation";
   }
-  updateDisplay(result, null, null); // Update display after each input
-  isResultDisplayed = true; // Checks flag
+
+  // Update display
+  updateDisplay(result, null, null);
+  isResultDisplayed = true;
 }
 
+// Resets all variables when user hits the Clear button
 function clearCalculation() {
-  num1 = null;
-  num2 = null;
+  num1 = "";
+  num2 = "";
+  result = "";
   operator = null;
   isBuildingNum2 = false;
-  num1DecimalCount = 0;
-  num2DecimalCount = 0;
-  updateDisplay(null, null, null); // Clear the display
+  isResultDisplayed = false;
+  updateDisplay("", null, "");
 }
 
+// Export
 module.exports = {
-  updateCalculation,
+  handleNumberInput,
+  handleDecimalInput,
+  handleOperatorInput,
   calculateResult,
-  clearCalculation
+  clearCalculation,
 };
