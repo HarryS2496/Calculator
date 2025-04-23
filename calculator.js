@@ -1,5 +1,3 @@
-// Add square root and percentages to operators
-
 let num1 = "";
 let num2 = "";
 let result = "";
@@ -41,6 +39,7 @@ function handleDecimalInput() {
   }
 
   // Check if decimal is added to num1 or num2
+  // If not, prefix decimal with 0
   if (isBuildingNum2) {
     if (num2.includes(".")) return;
     num2 = num2 === "" ? "0." : num2 + ".";
