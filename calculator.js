@@ -61,13 +61,6 @@ function handleOperatorInput(op) {
     isResultDisplayed = false;
   }
 
-  // If the operator is √ or %, handle the operation immediately
-  if (op === "√" || op === "%") {
-    operator = op;
-    calculateResult();
-    return; // Do not continue the regular operator handling for √ or %
-  }
-
   // Ensure num1 is not empty before setting an operator
   // After operator is set, change isBuildingNum2 flag
   if (num1 !== "") {
